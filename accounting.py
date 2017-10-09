@@ -10,6 +10,7 @@ ipython -i accounting.py
 
 import csv
 from decimal import Decimal
+import re
 
 def readCSV(filename, delimiter="\t"):
     """
@@ -24,7 +25,7 @@ def readCSV(filename, delimiter="\t"):
     return positionen
     
 
-def total(positionen):
+def total_betrag(positionen):
     """
     Sums up the items' 'Betrag' field.
     """
@@ -36,3 +37,12 @@ def diff_percent(v0, v1):
     Returns the difference from v0 to v1 in percent.
     """
     return (Decimal(v1)-Decimal(v0))/Decimal(v0)*Decimal("100")
+
+def supersum(thing):
+    """
+    Tries to sum up what it gets, regardless of the type
+    """
+    if type(thing) is str:
+        splitter_re = r',|\s|\n'
+        split_thing = re.split(splitter_re, thing)
+        return sum(map(lambda s: Decimal(s) if s is not '' else 0, split_thing))
