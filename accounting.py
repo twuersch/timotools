@@ -23,7 +23,7 @@ def readCSV(filename, delimiter="\t"):
         for position in reader:
             positionen.append(position)
     return positionen
-    
+
 
 def total_betrag(positionen):
     """
@@ -46,3 +46,6 @@ def supersum(thing):
         splitter_re = r',|\s|\n'
         split_thing = re.split(splitter_re, thing)
         return sum(map(lambda s: Decimal(s) if s is not '' else 0, split_thing))
+    elif type(thing) is list:
+        decimal_list = map(lambda s: Decimal(s), thing)
+        return sum(decimal_list)
