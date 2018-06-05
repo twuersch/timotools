@@ -23,9 +23,9 @@ except:
 try:
     alternate_hands = sys.argv[2] == 'alt'
     if not alternate_hands:
-        print "USAGE:"
-        print sys.argv[0], "[length of password]",
-        print "[alt (if you want the password to alternate hands]"
+        print("USAGE:")
+        print(sys.argv[0], "[length of password]",)
+        print("[alt (if you want the password to alternate hands]")
 except:
     alternate_hands = False
 
