@@ -11,6 +11,8 @@ ipython -i accounting.py
 import csv
 from decimal import Decimal
 import re
+from pprint import pformat
+from os import linesep
 
 def readCSV(filename, delimiter="\t"):
     """
@@ -45,7 +47,84 @@ def supersum(thing):
     if type(thing) is str:
         splitter_re = r',|\s|\n'
         split_thing = re.split(splitter_re, thing)
-        return sum(map(lambda s: Decimal(s) if s is not '' else 0, split_thing))
+        return sum(map(lambda s: Decimal(s) if s != '' else 0, split_thing))
     elif type(thing) is list:
         decimal_list = map(lambda s: Decimal(s), thing)
         return sum(decimal_list)
+
+class BetragProzentVonBruttolohn:
+    bruttolohn = Decimal()
+    prozent = Decimal()
+
+    def __init__(self, bruttolohn, prozent):
+        self.bruttolohn = bruttolohn
+        self.prozent = prozent
+
+    def decimal(self):
+        return self.bruttolohn * self.prozent * Decimal("0.01")
+
+    def __repr__(self):
+        return f"{self.decimal()} ({self.prozent}% von {self.bruttolohn})"
+
+class ArbeitnehmerbeitraegeBerechnung:
+    arbeitnehmerbeitraege = []
+    
+    def __init__(self, bruttolohn):
+        self.arbeitnehmerbeitraege = [
+            ["AHV", BetragProzentVonBruttolohn(bruttolohn, Decimal("4.35"))],
+            ["IV", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.7"))],
+            ["EO", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.25"))],
+            ["ALV", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.1"))],
+            ["Pensionskasse", Decimal("64.30")],
+            ["Nichtberufsunfall", Decimal()],
+            ["KTG", Decimal()],
+        ]
+        
+    def decimal(self):
+        summe = Decimal()
+        for zeile in self.arbeitnehmerbeitraege:
+            if type(zeile[1]) is not Decimal:
+                summe = summe + zeile[1].decimal()
+            else:
+                summe = summe + zeile[1]
+        return summe
+
+    def __repr__(self):
+        return pformat(self.arbeitnehmerbeitraege) \
+            + linesep \
+            + "-> Total Arbeitnehmerbeiträge: " \
+            + f"{self.decimal()}"
+            
+class ArbeitgeberbeitraegeBerechnung:
+    arbeitgeberbeitraege = []
+
+    def __init__(self, bruttolohn):
+        self.arbeitgeberbeitraege = [
+            ["AHV", BetragProzentVonBruttolohn(bruttolohn, Decimal("4.35"))],
+            ["IV", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.7"))],
+            ["EO", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.25"))],
+            ["ALV", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.1"))],
+            ["Pensionskasse", Decimal("64.30")],
+            ["FAK", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.2"))],
+            ["Berufsunfall", Decimal()],
+            ["KTG", Decimal()],
+        ]
+        
+    def decimal(self):
+        summe = Decimal()
+        for zeile in self.arbeitgeberbeitraege:
+            if type(zeile[1]) is not Decimal:
+                summe = summe + zeile[1].decimal()
+            else:
+                summe = summe + zeile[1]
+        return summe
+
+    def __repr__(self):
+        return pformat(self.arbeitgeberbeitraege) \
+            + linesep \
+            + "-> Total Arbeitgeberbeiträge: " \
+            + f"{self.decimal()}"
+
+bruttolohn = Decimal(2500)
+agberechnung = ArbeitgeberbeitraegeBerechnung(bruttolohn)
+anberechnung = ArbeitnehmerbeitraegeBerechnung(bruttolohn)
