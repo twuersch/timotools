@@ -76,8 +76,9 @@ class ArbeitnehmerbeitraegeBerechnung:
             ["EO", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.25"))],
             ["ALV", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.1"))],
             ["Pensionskasse", Decimal("64.30")],
-            ["Nichtberufsunfall", Decimal()],
-            ["KTG", Decimal()],
+            ["Nichtberufsunfall", Decimal("36.9375")],
+            ["KTG", Decimal("20.83125")],
+            ["Zusatz Taggeld", Decimal("2.36875")],
         ]
         
     def decimal(self):
@@ -106,8 +107,10 @@ class ArbeitgeberbeitraegeBerechnung:
             ["ALV", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.1"))],
             ["Pensionskasse", Decimal("64.30")],
             ["FAK", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.2"))],
-            ["Berufsunfall", Decimal()],
-            ["KTG", Decimal()],
+            ["Berufsunfall", Decimal("22.8125")],
+            ["KTG", Decimal("20.83125")],
+            ["Zusatz Taggeld", Decimal("2.36875")],
+            ["Differenz zu Minimalprämie KTG", Decimal("20.2625")]
         ]
         
     def decimal(self):
@@ -128,3 +131,5 @@ class ArbeitgeberbeitraegeBerechnung:
 bruttolohn = Decimal(2500)
 agberechnung = ArbeitgeberbeitraegeBerechnung(bruttolohn)
 anberechnung = ArbeitnehmerbeitraegeBerechnung(bruttolohn)
+nettolohn = bruttolohn - anberechnung.decimal()
+totalkosten = bruttolohn + agberechnung.decimal()
