@@ -64,7 +64,7 @@ class BetragProzentVonBruttolohn:
         return self.bruttolohn * self.prozent * Decimal("0.01")
 
     def __repr__(self):
-        return f"{self.decimal()} ({self.prozent}% von {self.bruttolohn})"
+        return f"{self.decimal().quantize(Decimal('0.01'))} ({self.prozent}% von {self.bruttolohn})"
 
 class ArbeitnehmerbeitraegeBerechnung:
     arbeitnehmerbeitraege = []
@@ -76,9 +76,9 @@ class ArbeitnehmerbeitraegeBerechnung:
             ["EO", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.25"))],
             ["ALV", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.1"))],
             ["Pensionskasse", Decimal("64.30")],
-            ["Nichtberufsunfall", Decimal("36.9375")],
-            ["KTG", Decimal("20.83125")],
-            ["Zusatz Taggeld", Decimal("2.36875")],
+            ["Nichtberufsunfall", Decimal("36.9375").quantize(Decimal('0.01'))],
+            ["KTG", Decimal("20.83125").quantize(Decimal('0.01'))],
+            ["Zusatz Taggeld", Decimal("2.36875").quantize(Decimal('0.01'))],
         ]
         
     def decimal(self):
@@ -94,7 +94,7 @@ class ArbeitnehmerbeitraegeBerechnung:
         return pformat(self.arbeitnehmerbeitraege) \
             + linesep \
             + "-> Total Arbeitnehmerbeiträge: " \
-            + f"{self.decimal()}"
+            + f"{self.decimal().quantize(Decimal('0.01'))}"
             
 class ArbeitgeberbeitraegeBerechnung:
     arbeitgeberbeitraege = []
@@ -107,10 +107,10 @@ class ArbeitgeberbeitraegeBerechnung:
             ["ALV", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.1"))],
             ["Pensionskasse", Decimal("64.30")],
             ["FAK", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.2"))],
-            ["Berufsunfall", Decimal("22.8125")],
-            ["KTG", Decimal("20.83125")],
-            ["Zusatz Taggeld", Decimal("2.36875")],
-            ["Differenz zu Minimalprämie KTG", Decimal("20.2625")]
+            ["Berufsunfall", Decimal("22.8125").quantize(Decimal('0.01'))],
+            ["KTG", Decimal("20.83125").quantize(Decimal('0.01'))],
+            ["Zusatz Taggeld", Decimal("2.36875").quantize(Decimal('0.01'))],
+            ["Differenz zu Minimalprämie KTG", Decimal("20.2625").quantize(Decimal('0.01'))]
         ]
         
     def decimal(self):
@@ -126,7 +126,7 @@ class ArbeitgeberbeitraegeBerechnung:
         return pformat(self.arbeitgeberbeitraege) \
             + linesep \
             + "-> Total Arbeitgeberbeiträge: " \
-            + f"{self.decimal()}"
+            + f"{self.decimal().quantize(Decimal('0.01'))}"
 
 bruttolohn = Decimal(2500)
 agberechnung = ArbeitgeberbeitraegeBerechnung(bruttolohn)
