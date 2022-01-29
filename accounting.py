@@ -75,11 +75,25 @@ class ArbeitnehmerbeitraegeBerechnung:
             ["IV", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.7"))],
             ["EO", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.25"))],
             ["ALV", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.1"))],
-            ["Pensionskasse", Decimal("64.30")],
+            ["Pensionskasse", Decimal("122.85")],
             ["Nichtberufsunfall", Decimal("36.9375").quantize(Decimal('0.01'))],
-            ["KTG", Decimal("20.83125").quantize(Decimal('0.01'))],
-            ["Zusatz Taggeld", Decimal("2.36875").quantize(Decimal('0.01'))],
+            ["KTG", (Decimal("583.80") / Decimal("12") / Decimal("2")).quantize(Decimal('0.01'))],
         ]
+        
+    def __iter__(self):
+        self.iter_index = 0
+        return self
+        
+    def __next__(self):
+        if self.iter_index < len(self.arbeitnehmerbeitraege):
+            value = self.arbeitnehmerbeitraege[self.iter_index][1]
+            self.iter_index = self.iter_index + 1
+            if type(value) is BetragProzentVonBruttolohn:
+                return value.decimal()
+            else:
+                return value
+        else:
+            raise StopIteration
         
     def decimal(self):
         summe = Decimal()
@@ -105,13 +119,26 @@ class ArbeitgeberbeitraegeBerechnung:
             ["IV", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.7"))],
             ["EO", BetragProzentVonBruttolohn(bruttolohn, Decimal("0.25"))],
             ["ALV", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.1"))],
-            ["Pensionskasse", Decimal("64.30")],
+            ["Pensionskasse", Decimal("122.85")],
             ["FAK", BetragProzentVonBruttolohn(bruttolohn, Decimal("1.2"))],
             ["Berufsunfall", Decimal("22.8125").quantize(Decimal('0.01'))],
-            ["KTG", Decimal("20.83125").quantize(Decimal('0.01'))],
-            ["Zusatz Taggeld", Decimal("2.36875").quantize(Decimal('0.01'))],
-            ["Differenz zu Minimalprämie KTG", Decimal("20.2625").quantize(Decimal('0.01'))]
+            ["KTG", (Decimal("583.80") / Decimal("12") / Decimal("2")).quantize(Decimal('0.01'))],
         ]
+
+    def __iter__(self):
+        self.iter_index = 0
+        return self
+        
+    def __next__(self):
+        if self.iter_index < len(self.arbeitgeberbeitraege):
+            value = self.arbeitgeberbeitraege[self.iter_index][1]
+            self.iter_index = self.iter_index + 1
+            if type(value) is BetragProzentVonBruttolohn:
+                return value.decimal()
+            else:
+                return value
+        else:
+            raise StopIteration
         
     def decimal(self):
         summe = Decimal()
@@ -128,7 +155,7 @@ class ArbeitgeberbeitraegeBerechnung:
             + "-> Total Arbeitgeberbeiträge: " \
             + f"{self.decimal().quantize(Decimal('0.01'))}"
 
-bruttolohn = Decimal(2500)
+bruttolohn = Decimal(3500)
 agberechnung = ArbeitgeberbeitraegeBerechnung(bruttolohn)
 anberechnung = ArbeitnehmerbeitraegeBerechnung(bruttolohn)
 nettolohn = bruttolohn - anberechnung.decimal()
