@@ -155,8 +155,14 @@ class ArbeitgeberbeitraegeBerechnung:
             + "-> Total Arbeitgeberbeiträge: " \
             + f"{self.decimal().quantize(Decimal('0.01'))}"
 
-bruttolohn = Decimal(3500)
+bruttolohn = Decimal("3500")
 agberechnung = ArbeitgeberbeitraegeBerechnung(bruttolohn)
 anberechnung = ArbeitnehmerbeitraegeBerechnung(bruttolohn)
 nettolohn = bruttolohn - anberechnung.decimal()
 totalkosten = bruttolohn + agberechnung.decimal()
+
+bruttolohn2 = Decimal("4500")
+agberechnung2 = ArbeitgeberbeitraegeBerechnung(bruttolohn2)
+anberechnung2 = ArbeitnehmerbeitraegeBerechnung(bruttolohn2)
+nettolohn2 = bruttolohn2 - anberechnung2.decimal()
+totalkosten2 = bruttolohn2 + agberechnung2.decimal()
